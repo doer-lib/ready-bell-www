@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ready-bell — live demo</title>
+  <meta name="description" content="Try ready-bell in your browser: start a slow job, wait for its Ready notification with nc, and watch a cloud job report back through ready-bell over Server-Sent Events." />
+  <link rel="canonical" href="https://www.ready-bell.com/demo.html" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/demo.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M16 6c-1 0-1.8.8-1.8 1.8v.7c-3 .7-5.2 3.4-5.2 6.6v4.4l-1.6 2.4c-.3.5.03 1.1.6 1.1h16c.57 0 .9-.6.6-1.1L23 19.5v-4.4c0-3.2-2.2-5.9-5.2-6.6v-.7C17.8 6.8 17 6 16 6z" fill="currentColor" />
+          <path d="M13.2 23.6a2.8 2.8 0 0 0 5.6 0z" fill="currentColor" />
+        </svg>
+        Ready Bell
+      </a>
+      <nav class="site-nav">
+        <a href="/">How it works</a>
+        <a href="#hello-async">hello-async</a>
+        <a href="#hello-cloud">hello-cloud</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero hero-compact" id="top">
+      <div class="container">
+        <p class="pill">demo.ready-bell.com · live</p>
+        <h1>Live demo</h1>
+        <p class="lead">
+          Two small services built on ready-bell. In the first, the backend
+          <strong>sends</strong> the notification when a slow job finishes. In the second, the backend
+          <strong>waits</strong> for a notification from an AWS Lambda. Every button below calls
+          the real API at <code>https://demo.ready-bell.com</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================ hello-async ============================ -->
+    <section id="hello-async" class="section section-alt">
+      <div class="container">
+        <h2>1. hello-async: the backend sends <code>Notify</code></h2>
+        <p class="section-intro">
+          Start a job that pretends to work for a few seconds. When it finishes, the backend sends
+          <code>Notify &lt;uuid&gt;</code> to ready-bell, and your terminal, listening on the same
+          uuid, receives <code>Ready &lt;uuid&gt;</code>. That is the moment to fetch the result.
+        </p>
+
+        <ol class="steps">
+          <li class="step">
+            <h3>Pick a uuid</h3>
+            <div class="row">
+              <label class="field field-grow">
+                <span>uuid</span>
+                <input id="a-uuid" class="mono" type="text" spellcheck="false" autocomplete="off" />
+              </label>
+              <button id="a-uuid-gen" class="btn" type="button">Generate</button>
+            </div>
+          </li>
+
+          <li class="step">
+            <h3>Listen for it in a terminal</h3>
+            <p class="hint">
+              Start nc in a terminal, then paste the <code>Listen</code> line and press Enter.
+              nc prints <code>Registered …</code> right away, then <code>Ready …</code> when the
+              job below finishes. The subscription lasts 120 seconds.
+            </p>
+            <div class="code-block">
+              <span class="file-label">terminal</span>
+              <button class="copy-btn" type="button">Copy</button>
+              <pre><code>nc -u ready-bell.com 3137</code></pre>
+            </div>
+            <div class="code-block">
+              <span class="file-label">paste into nc</span>
+              <button class="copy-btn" type="button">Copy</button>
+              <pre><code id="a-listen"></code></pre>
+              <pre class="response"><span class="response-label">expected response</span><code id="a-response"></code></pre>
+            </div>
+          </li>
+
+          <li class="step">
+            <h3>Start the job</h3>
+            <div class="row">
+              <label class="field field-grow">
+                <span>name</span>
+                <input id="a-name" type="text" value="World" autocomplete="off" />
+              </label>
+              <label class="field field-narrow">
+                <span>dbg-delay-sec</span>
+                <input id="a-delay" type="number" min="0" max="600" value="10" />
+              </label>
+            </div>
+            <div class="request">
+              <span class="method">POST</span>
+              <output id="a-post-url" class="url mono"></output>
+              <button id="a-post" class="btn btn-primary" type="button">POST</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <dl class="summary" id="a-post-summary" hidden>
+              <dt>status</dt><dd><span id="a-post-job-status" class="job-status"></span></dd>
+              <dt>Location</dt><dd id="a-post-location" class="mono"></dd>
+              <dt>greeting</dt><dd id="a-post-greeting"></dd>
+            </dl>
+            <pre class="json" hidden></pre>
+          </li>
+
+          <li class="step">
+            <h3>Get the result when <code>Ready</code> arrives</h3>
+            <div class="request">
+              <span class="method">GET</span>
+              <input id="a-get-url" class="url mono" type="text" spellcheck="false" placeholder="Filled in from the Location header after POST" />
+              <button id="a-get" class="btn btn-primary" type="button">GET</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <dl class="summary" id="a-get-summary" hidden>
+              <dt>status</dt><dd><span id="a-get-job-status" class="job-status"></span></dd>
+              <dt>greeting</dt><dd id="a-get-greeting"></dd>
+            </dl>
+            <pre class="json" hidden></pre>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ hello-cloud ============================ -->
+    <section id="hello-cloud" class="section">
+      <div class="container">
+        <h2>2. hello-cloud: the backend waits for <code>Ready</code></h2>
+        <p class="section-intro">
+          The work runs in AWS. You upload <code>input.txt</code> straight to S3, which triggers a
+          Lambda that writes <code>output.txt</code> and sends <code>Notify &lt;uuid&gt;</code>.
+          The backend listens on the uuid, so the <code>Ready</code> makes it check S3 right away
+          instead of at its next 10-second poll. The event stream shows what the backend does.
+        </p>
+
+        <ol class="steps">
+          <li class="step">
+            <h3>Pick a uuid</h3>
+            <div class="row">
+              <label class="field field-grow">
+                <span>uuid</span>
+                <input id="c-uuid" class="mono" type="text" spellcheck="false" autocomplete="off" />
+              </label>
+              <button id="c-uuid-gen" class="btn" type="button">Generate</button>
+            </div>
+            <p class="hint">
+              Optional: listen for the Lambda's notification yourself. Start nc in a terminal,
+              then paste the <code>Listen</code> line and press Enter.
+            </p>
+            <div class="code-block">
+              <span class="file-label">terminal</span>
+              <button class="copy-btn" type="button">Copy</button>
+              <pre><code>nc -u ready-bell.com 3137</code></pre>
+            </div>
+            <div class="code-block">
+              <span class="file-label">paste into nc</span>
+              <button class="copy-btn" type="button">Copy</button>
+              <pre><code id="c-listen"></code></pre>
+              <pre class="response"><span class="response-label">expected response</span><code id="c-response"></code></pre>
+            </div>
+          </li>
+
+          <li class="step">
+            <h3>Create the job</h3>
+            <div class="request">
+              <span class="method">POST</span>
+              <output id="c-post-url" class="url mono"></output>
+              <button id="c-post" class="btn btn-primary" type="button">POST</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <dl class="summary" id="c-post-summary" hidden>
+              <dt>Location</dt><dd id="c-post-location" class="mono"></dd>
+            </dl>
+            <pre class="json" hidden></pre>
+          </li>
+
+          <li class="step">
+            <h3>Watch the backend</h3>
+            <p class="hint">
+              Connects automatically after the POST above. If you connect before it, the backend
+              answers <code>unknown uuid</code> and the stream keeps retrying until the job exists.
+            </p>
+            <div class="request">
+              <span class="method">SSE</span>
+              <output id="c-sse-url" class="url mono"></output>
+              <button id="c-sse-connect" class="btn" type="button">Connect</button>
+              <button id="c-sse-disconnect" class="btn" type="button" disabled>Disconnect</button>
+            </div>
+            <div class="sse-panel">
+              <div class="sse-head">
+                <span id="c-sse-dot" class="dot" aria-hidden="true"></span>
+                <span id="c-sse-state" class="sse-state">disconnected</span>
+                <span id="c-sse-detail" class="sse-detail"></span>
+                <button id="c-sse-clear" class="link-btn" type="button">Clear</button>
+              </div>
+              <ol id="c-sse-log" class="sse-log" aria-live="polite">
+                <li class="sse-empty">No events yet.</li>
+              </ol>
+            </div>
+          </li>
+
+          <li class="step">
+            <h3>Check the job</h3>
+            <div class="request">
+              <span class="method">GET</span>
+              <input id="c-get-url" class="url mono" type="text" spellcheck="false" placeholder="Filled in from the Location header after POST" />
+              <button id="c-get" class="btn btn-primary" type="button">GET</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <pre class="json" hidden></pre>
+          </li>
+
+          <li class="step">
+            <h3>Upload the input to S3</h3>
+            <p class="hint">
+              The upload link is only valid for 60 seconds after the POST. If it has expired,
+              POST again with a new uuid.
+            </p>
+            <div class="row">
+              <label class="field field-grow">
+                <span>name (the content of input.txt)</span>
+                <input id="c-name" type="text" value="World" autocomplete="off" />
+              </label>
+            </div>
+            <div class="request">
+              <span class="method">PUT</span>
+              <input id="c-put-url" class="url mono" type="text" spellcheck="false" placeholder="Filled in from inputPutUrl in the job JSON" />
+              <button id="c-put" class="btn btn-primary" type="button">PUT</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <pre class="json" hidden></pre>
+          </li>
+
+          <li class="step">
+            <h3>Download the result from S3</h3>
+            <div class="request">
+              <span class="method">GET</span>
+              <input id="c-out-url" class="url mono" type="text" spellcheck="false" placeholder="Filled in from outputGetUrl in the job JSON" />
+              <button id="c-out" class="btn btn-primary" type="button">GET</button>
+              <span class="status" aria-live="polite">—</span>
+            </div>
+            <pre class="json" hidden></pre>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>ready-bell — one-shot UDP notifications. Demo source: <a href="https://github.com/doer-lib/ready-bell-demo">ready-bell-demo</a>.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/demo.js" defer></script>
+</body>
+</html>
