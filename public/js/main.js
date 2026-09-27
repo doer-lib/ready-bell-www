@@ -55,24 +55,21 @@
     });
   });
 
-  document.querySelectorAll(".copy-btn").forEach(function (button) {
-    button.addEventListener("click", function () {
-      var block = button.closest(".code-block");
-      var code = block ? block.querySelector("pre code") : null;
+  // Delegated, so copy buttons added later (e.g. by try.js) work too.
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest(".copy-btn");
+    var block = button ? button.closest(".code-block") : null;
+    var code = block ? block.querySelector("pre code") : null;
 
-      if (!code) {
-        return;
-      }
+    if (!code) {
+      return;
+    }
 
-      var text = code.textContent;
-      var originalLabel = button.textContent;
-
-      navigator.clipboard.writeText(text).then(function () {
-        button.textContent = "Copied!";
-        setTimeout(function () {
-          button.textContent = originalLabel;
-        }, 1500);
-      });
+    navigator.clipboard.writeText(code.textContent).then(function () {
+      button.textContent = "Copied!";
+      setTimeout(function () {
+        button.textContent = "Copy";
+      }, 1500);
     });
   });
 

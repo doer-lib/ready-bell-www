@@ -38,13 +38,43 @@
         <p class="pill">ready-bell.com:3137 · UDP</p>
         <h1>Get results the moment they’re ready.</h1>
         <p class="lead">
-          Polling forces a trade-off between latency and wasted requests. Ready Bell removes it:
-          send <code>Listen &lt;uuid&gt; &lt;seconds&gt;</code>, receive
-          <code>Ready &lt;uuid&gt;</code>, then poll once. No open connections, no extra API
-          endpoints — just UDP.
+          Polling forces a choice: poll often and waste requests, or poll rarely and add latency.
+          Ready Bell tells your clients exactly when to check — with one small UDP packet.
         </p>
         <div class="hero-actions">
           <a class="button button-primary" href="demo.html">Live demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="why" class="section section-alt">
+      <div class="container">
+        <div class="pitch-grid">
+          <article class="pitch-card">
+            <h3>Poll less. Know when to check.</h3>
+            <p>How often should you poll for an asynchronous result?</p>
+            <ul class="pitch-list">
+              <li><strong>Poll too often</strong> → waste requests.</li>
+              <li><strong>Poll less often</strong> → increase latency.</li>
+            </ul>
+            <p>Send a UDP packet to <code>ready-bell.com:3137</code>:</p>
+            <p class="pitch-cmd"><code>Listen &lt;uuid&gt; 60</code></p>
+            <p>When the operation finishes, Ready Bell sends:</p>
+            <p class="pitch-cmd"><code>Ready &lt;uuid&gt;</code></p>
+            <p>Fetch the result immediately.</p>
+            <p class="pitch-punch">Low request rate. Low latency.</p>
+          </article>
+
+          <article class="pitch-card">
+            <h3>Finish the work. Send one notification.</h3>
+            <p>Your API starts an asynchronous operation.</p>
+            <p>When it's done, send a UDP packet to <code>ready-bell.com:3137</code>:</p>
+            <p class="pitch-cmd"><code>Notify &lt;uuid&gt;</code></p>
+            <p>Ready Bell finds the clients listening for that operation and sends them:</p>
+            <p class="pitch-cmd"><code>Ready &lt;uuid&gt;</code></p>
+            <p>Your backend doesn't need to know who's waiting.</p>
+            <p class="pitch-punch">One small UDP packet. Ready Bell handles the rest.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -54,9 +84,8 @@
         <h2>How it works</h2>
         <p class="section-intro">
           A Listener sends <code>Listen &lt;uuid&gt; &lt;seconds&gt;</code>. Later, a Notifier sends
-          <code>Notify &lt;uuid&gt;</code> when that UUID's result is ready. The server fires a
-          single <code>Ready &lt;uuid&gt;</code> packet to every Listener currently waiting on it — nothing to install, nothing to keep running besides
-          your own client code.
+          <code>Notify &lt;uuid&gt;</code> when that UUID's result is ready. Ready Bell sends a
+          single <code>Ready &lt;uuid&gt;</code> packet to every Listener currently waiting on it.
         </p>
 
         <div class="diagram-wrap">
@@ -95,6 +124,65 @@
             <line x1="366" y1="200" x2="628" y2="200" class="msg-line" marker-end="url(#arrow)" />
           </svg>
         </div>
+      </div>
+    </section>
+
+    <section id="try" class="section section-flush">
+      <div class="container">
+        <h2>Try it in 10 seconds</h2>
+        <p class="section-intro">
+          Each terminal below opens its own UDP socket to <code>ready-bell.com:3137</code>.
+          Click <strong>Listen</strong> in one, then <strong>Notify</strong> in the other.
+        </p>
+
+        <div class="try-uuid">
+          <label for="try-uuid">uuid</label>
+          <input id="try-uuid" class="mono" type="text" spellcheck="false" autocomplete="off" />
+          <button id="try-uuid-gen" class="button button-secondary button-sm" type="button">Generate</button>
+        </div>
+        <p class="try-hint">Several uuids separated by spaces send one command per uuid.</p>
+
+        <div class="try-grid">
+          <div class="term" data-term>
+            <div class="term-bar">
+              <span class="term-dot" aria-hidden="true"></span>
+              <span class="term-title">Terminal 1</span>
+              <span class="term-status" aria-live="polite">disconnected</span>
+            </div>
+            <pre class="term-log" aria-label="Terminal 1 output"></pre>
+            <div class="term-actions">
+              <button class="button button-secondary button-sm" type="button" data-action="connect" aria-pressed="false">Connect</button>
+              <button class="button button-secondary button-sm" type="button" data-action="listen">Listen</button>
+              <button class="button button-secondary button-sm" type="button" data-action="notify">Notify</button>
+            </div>
+          </div>
+
+          <div class="term" data-term>
+            <div class="term-bar">
+              <span class="term-dot" aria-hidden="true"></span>
+              <span class="term-title">Terminal 2</span>
+              <span class="term-status" aria-live="polite">disconnected</span>
+            </div>
+            <pre class="term-log" aria-label="Terminal 2 output"></pre>
+            <div class="term-actions">
+              <button class="button button-secondary button-sm" type="button" data-action="connect" aria-pressed="false">Connect</button>
+              <button class="button button-secondary button-sm" type="button" data-action="listen">Listen</button>
+              <button class="button button-secondary button-sm" type="button" data-action="notify">Notify</button>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="try-nc-title">Or use your own terminal</h3>
+        <p class="example-note">Run this in two terminals:</p>
+        <div class="code-block">
+          <span class="file-label">terminal 1 and 2</span>
+          <button class="copy-btn" type="button">Copy</button>
+          <pre><code class="nohighlight">nc -u ready-bell.com 3137</code></pre>
+        </div>
+        <p class="example-note">Paste into terminal 1:</p>
+        <div id="try-nc-listen"></div>
+        <p class="example-note">Then, within 60 seconds, paste into terminal 2:</p>
+        <div id="try-nc-notify"></div>
       </div>
     </section>
 
@@ -435,15 +523,21 @@ public record ReadyBellEvent(UUID uuid) {
         </div>
       </div>
     </section>
-  </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>ready-bell — one-shot UDP notifications.</p>
-    </div>
-  </footer>
+    <section id="contact" class="section section-alt contact">
+      <div class="container">
+        <h2>Questions, feedback or interested in using Ready Bell?</h2>
+        <p class="contact-email"><a href="mailto:ready-bell@proton.me">ready-bell@proton.me</a></p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="demo.html">Live demo</a>
+          <a class="button button-secondary" href="https://github.com/doer-lib/ready-bell-demo">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/try.js" defer></script>
 </body>
 </html>
