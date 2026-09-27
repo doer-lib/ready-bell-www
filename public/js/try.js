@@ -196,9 +196,11 @@
   var ncListen = document.getElementById("try-nc-listen");
   var ncNotify = document.getElementById("try-nc-notify");
 
-  function codeBlock(label, text) {
+  // One block per terminal. Copied as-is for one command; for several, each line ends with \r\n.
+  function codeBlock(label, lines) {
     var block = document.createElement("div");
     block.className = "code-block code-block-line";
+    block.setAttribute("data-copy", lines.length > 1 ? lines.join("\r\n") + "\r\n" : lines[0]);
     var labelEl = document.createElement("span");
     labelEl.className = "file-label";
     labelEl.textContent = label;
@@ -208,7 +210,7 @@
     btn.textContent = "Copy";
     var pre = document.createElement("pre");
     var code = document.createElement("code");
-    code.textContent = text;
+    code.textContent = lines.join("\n");
     pre.appendChild(code);
     block.appendChild(labelEl);
     block.appendChild(btn);
@@ -219,12 +221,8 @@
   function renderNc() {
     var list = uuids();
     if (!list.length) list = ["<uuid>"];
-    ncListen.replaceChildren.apply(ncListen, list.map(function (u) {
-      return codeBlock("terminal 1", listenCmd(u));
-    }));
-    ncNotify.replaceChildren.apply(ncNotify, list.map(function (u) {
-      return codeBlock("terminal 2", notifyCmd(u));
-    }));
+    ncListen.replaceChildren(codeBlock("terminal 1", list.map(listenCmd)));
+    ncNotify.replaceChildren(codeBlock("terminal 2", list.map(notifyCmd)));
   }
 
   uuidInput.addEventListener("input", renderNc);

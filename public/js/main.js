@@ -65,7 +65,9 @@
       return;
     }
 
-    navigator.clipboard.writeText(code.textContent).then(function () {
+    // data-copy overrides the shown text, e.g. to add \r\n line endings.
+    var text = block.getAttribute("data-copy");
+    navigator.clipboard.writeText(text == null ? code.textContent : text).then(function () {
       button.textContent = "Copied!";
       setTimeout(function () {
         button.textContent = "Copy";

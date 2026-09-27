@@ -577,6 +577,7 @@ pre code {
   align-items: center;
   gap: 10px;
   max-width: 720px;
+  margin-bottom: 24px;
 }
 
 .try-uuid label {
@@ -600,12 +601,6 @@ pre code {
 .try-uuid input:focus {
   outline: 2px solid var(--accent);
   outline-offset: -1px;
-}
-
-.try-hint {
-  margin: 6px 0 24px;
-  color: var(--text-secondary);
-  font-size: 0.88rem;
 }
 
 .try-grid {
