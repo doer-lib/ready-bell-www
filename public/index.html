@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ready-bell — one-shot UDP notifications</title>
-  <meta name="description" content="ready-bell is a hosted, one-shot UDP notification service at ready-bell.com:3137. Keep polling for results, and get a UDP packet the moment they're ready — no open connections, no extra endpoints, no broker." />
+  <title>ready-bell — UDP ready notifications</title>
+  <meta name="description" content="ready-bell is a hosted UDP notification service at ready-bell.com:3137. Keep polling for results, and get a UDP packet the moment they're ready — no open connections, no extra endpoints, no broker." />
   <link rel="canonical" href="https://www.ready-bell.com/" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -204,7 +204,7 @@
                 <td>Listener client → Server</td>
                 <td><code>Listen &lt;uuid&gt; &lt;ttlSeconds&gt;</code></td>
                 <td><code>Registered &lt;uuid&gt; &lt;ip&gt; &lt;port&gt; &lt;ttlSeconds&gt;</code></td>
-                <td>Subscribe to a UUID for up to <code>ttlSeconds</code> seconds. The subscription is one-shot and is removed when <code>Ready</code> is sent or the TTL expires. <code>&lt;ip&gt;</code> and <code>&lt;port&gt;</code> are the UDP source address observed by the server.</td>
+                <td>Subscribe to a UUID for up to <code>ttlSeconds</code> seconds. The subscription is removed when the TTL expires. <code>&lt;ip&gt;</code> and <code>&lt;port&gt;</code> are the UDP source address observed by the server.</td>
               </tr>
               <tr>
                 <td>Notifier client → Server</td>
@@ -216,7 +216,7 @@
                 <td>Server → Listener client</td>
                 <td><code>Ready &lt;uuid&gt;</code></td>
                 <td>—</td>
-                <td>One-shot notification sent to every Listener subscribed to the UUID.</td>
+                <td>Notification sent to every Listener subscribed to the UUID, once per <code>Notify</code>.</td>
               </tr>
               <tr>
                 <td>Any client → Server</td>
@@ -230,7 +230,7 @@
 
         <p class="note">
           Multiple Listener clients can subscribe to the same UUID — a <code>Notify</code> sends
-          <code>Ready</code> to all of them. ready-bell runs over UDP and provides no delivery
+          <code>Ready</code> to all of them. Ready Bell runs over UDP and provides no delivery
           guarantees: commands, responses, and notifications may be lost, duplicated, or
           reordered. A <code>Notified</code> response only confirms the server attempted to send
           the notification, not that it arrived — keep your regular re-check schedule running as
