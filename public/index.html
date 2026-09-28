@@ -130,11 +130,6 @@
     <section id="try" class="section section-flush">
       <div class="container">
         <h2>Try it in 10 seconds</h2>
-        <p class="section-intro">
-          Each terminal below opens its own UDP socket to <code>ready-bell.com:3137</code>.
-          Click <strong>Listen</strong> in one, then <strong>Notify</strong> in the other.
-        </p>
-
         <div class="try-uuid">
           <label for="try-uuid">uuid</label>
           <input id="try-uuid" class="mono" type="text" spellcheck="false" autocomplete="off" />
@@ -170,9 +165,10 @@
             </div>
           </div>
         </div>
+        <p class="try-hint">Click <strong>Listen</strong> in one terminal and <strong>Notify</strong> in the other.</p>
 
-        <h3 class="try-nc-title">Or use your own terminal</h3>
-        <p class="example-note">Run this in two terminals:</p>
+        <h3 class="try-nc-title">Or try it in your own terminal</h3>
+        <p class="example-note">Run netcat in two terminals:</p>
         <div class="code-block">
           <span class="file-label">terminal 1 and 2</span>
           <button class="copy-btn" type="button">Copy</button>
@@ -180,7 +176,7 @@
         </div>
         <p class="example-note">Paste into terminal 1:</p>
         <div id="try-nc-listen"></div>
-        <p class="example-note">Then, within 60 seconds, paste into terminal 2:</p>
+        <p class="example-note">Paste into terminal 2:</p>
         <div id="try-nc-notify"></div>
       </div>
     </section>

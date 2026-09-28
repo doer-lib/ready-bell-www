@@ -111,7 +111,7 @@
       if (msg.type === "error") {
         self.print("error: " + data, "term-err");
       } else {
-        self.print(data, "term-in");
+        self.print(data, /^Ready\s/.test(data) ? "term-ready" : "term-in");
       }
     };
 
@@ -150,7 +150,7 @@
   Terminal.prototype.pump = function () {
     if (this.timer || !this.queue.length || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
     var cmd = this.queue.shift();
-    this.print("> " + cmd, "term-out");
+    this.print(cmd, "term-out");
     this.ws.send(JSON.stringify({ type: "send", data: cmd }));
     var self = this;
     this.timer = setTimeout(function () {
