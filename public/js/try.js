@@ -191,38 +191,23 @@
     });
   });
 
-  // --- copyable commands for a real terminal ---
+  // --- commands for a real terminal ---
 
   var ncListen = document.getElementById("try-nc-listen");
   var ncNotify = document.getElementById("try-nc-notify");
 
-  // One block per terminal. Copied as-is for one command; for several, each line ends with \r\n.
-  function codeBlock(label, lines) {
-    var block = document.createElement("div");
-    block.className = "code-block code-block-line";
-    block.setAttribute("data-copy", lines.length > 1 ? lines.join("\r\n") + "\r\n" : lines[0]);
-    var labelEl = document.createElement("span");
-    labelEl.className = "file-label";
-    labelEl.textContent = label;
-    var btn = document.createElement("button");
-    btn.className = "copy-btn";
-    btn.type = "button";
-    btn.textContent = "Copy";
+  function cmdLines(lines) {
     var pre = document.createElement("pre");
-    var code = document.createElement("code");
-    code.textContent = lines.join("\n");
-    pre.appendChild(code);
-    block.appendChild(labelEl);
-    block.appendChild(btn);
-    block.appendChild(pre);
-    return block;
+    pre.className = "try-cmd";
+    pre.textContent = lines.join("\n");
+    return pre;
   }
 
   function renderNc() {
     var list = uuids();
     if (!list.length) list = ["<uuid>"];
-    ncListen.replaceChildren(codeBlock("terminal 1", list.map(listenCmd)));
-    ncNotify.replaceChildren(codeBlock("terminal 2", list.map(notifyCmd)));
+    ncListen.replaceChildren(cmdLines(list.map(listenCmd)));
+    ncNotify.replaceChildren(cmdLines(list.map(notifyCmd)));
   }
 
   uuidInput.addEventListener("input", renderNc);
