@@ -68,9 +68,12 @@
     // data-copy overrides the shown text, e.g. to add \r\n line endings.
     var text = block.getAttribute("data-copy");
     navigator.clipboard.writeText(text == null ? code.textContent : text).then(function () {
-      button.textContent = "Copied!";
-      setTimeout(function () {
-        button.textContent = "Copy";
+      clearTimeout(button.copiedTimer);
+      button.classList.add("copied");
+      button.setAttribute("aria-label", "Copied");
+      button.copiedTimer = setTimeout(function () {
+        button.classList.remove("copied");
+        button.setAttribute("aria-label", "Copy to clipboard");
       }, 1500);
     });
   });

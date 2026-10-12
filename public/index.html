@@ -231,7 +231,7 @@
             <div class="code-block">
               <span class="file-label">listener.js</span>
               <a class="raw-link" href="examples/listener.js">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-javascript">import dgram from "dgram";
 
 const socket = dgram.createSocket("udp4");
@@ -243,7 +243,7 @@ socket.send(`Listen ${uuid} 30`, 3137, "ready-bell.com");</code></pre>
             <div class="code-block">
               <span class="file-label">notifier.js</span>
               <a class="raw-link" href="examples/notifier.js">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-javascript">import dgram from "dgram";
 
 const socket = dgram.createSocket("udp4");
@@ -262,7 +262,7 @@ socket.send(`Notify ${uuid}`, 3137, "ready-bell.com");</code></pre>
             <div class="code-block">
               <span class="file-label">listener.py</span>
               <a class="raw-link" href="examples/listener.py">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-python">import socket
 
 uuid = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -277,7 +277,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             <div class="code-block">
               <span class="file-label">notifier.py</span>
               <a class="raw-link" href="examples/notifier.py">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-python">import socket
 
 uuid = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -298,7 +298,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             <div class="code-block">
               <span class="file-label">listener.java</span>
               <a class="raw-link" href="examples/listener.java">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-java">import java.net.*;
 
 void main() throws Exception {
@@ -320,7 +320,7 @@ void main() throws Exception {
             <div class="code-block">
               <span class="file-label">notifier.java</span>
               <a class="raw-link" href="examples/notifier.java">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-java">import java.net.*;
 
 void main() throws Exception {
@@ -350,7 +350,7 @@ void main() throws Exception {
             <div class="code-block">
               <span class="file-label">ReadyBellService.java</span>
               <a class="raw-link" href="examples/ReadyBellService.java">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-java">package readybell;
 
 import java.io.IOException;
@@ -451,7 +451,7 @@ public class ReadyBellService {
             <div class="code-block">
               <span class="file-label">ReadyBellEvent.java</span>
               <a class="raw-link" href="examples/ReadyBellEvent.java">View raw</a>
-              <button class="copy-btn" type="button">Copy</button>
+              <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code class="language-java">package readybell;
 
 import java.util.UUID;
