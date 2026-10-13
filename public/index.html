@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ready-bell — UDP ready notifications</title>
-  <meta name="description" content="ready-bell is a hosted UDP notification service at ready-bell.com:3137. Keep polling for results, and get a UDP packet the moment they're ready — no open connections, no extra endpoints, no broker." />
+  <title>Ready Bell — UDP ready notifications</title>
+  <meta name="description" content="Ready Bell is a hosted UDP notification service at ready-bell.com:3137. Keep polling for results, and get a UDP packet the moment they're ready — no open connections, no extra endpoints, no broker." />
   <link rel="canonical" href="https://www.ready-bell.com/" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -21,10 +21,10 @@
         Ready Bell
       </a>
       <nav class="site-nav">
+        <a href="#try">Try</a>
         <a href="#how-it-works">How it works</a>
         <a href="#protocol">Protocol</a>
         <a href="#examples">Examples</a>
-        <a href="demo.html">Live demo</a>
       </nav>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
         <span></span>
@@ -47,7 +47,7 @@
 
     <section id="try" class="section section-alt">
       <div class="container">
-        <h2>Click Listen. Click Notify. Watch Ready Appear.</h2>
+        <h2>Click Listen. Click Notify. Watch Ready appear.</h2>
         <div class="try-uuid">
           <label for="try-uuid">uuid</label>
           <input id="try-uuid" class="mono" type="text" spellcheck="false" autocomplete="off" />
@@ -112,7 +112,7 @@
 
         <div class="diagram-wrap">
           <svg viewBox="0 0 720 224" role="img" aria-labelledby="diagram-title">
-            <title id="diagram-title">Sequence diagram of the ready-bell protocol between a Listener client, the server, and a Notifier client</title>
+            <title id="diagram-title">Sequence diagram of the Ready Bell protocol between a Listener client, the server, and a Notifier client</title>
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M0,0 L10,5 L0,10 z" class="msg-arrowhead"></path>
@@ -153,7 +153,7 @@
       <div class="container">
         <h2>Protocol reference</h2>
         <p class="section-intro">
-          ready-bell speaks UTF-8 plain-text messages over UDP. Each datagram carries exactly
+          Ready Bell speaks UTF-8 plain-text messages over UDP. Each datagram carries exactly
           one command or response.
         </p>
 
@@ -170,9 +170,9 @@
             <tbody>
               <tr>
                 <td>Listener client → Server</td>
-                <td><code>Listen &lt;uuid&gt; &lt;ttlSeconds&gt;</code></td>
-                <td><code>Registered &lt;uuid&gt; &lt;ip&gt; &lt;port&gt; &lt;ttlSeconds&gt;</code></td>
-                <td>Subscribe to a UUID for up to <code>ttlSeconds</code> seconds. The subscription is removed when the TTL expires. <code>&lt;ip&gt;</code> and <code>&lt;port&gt;</code> are the UDP source address observed by the server.</td>
+                <td><code>Listen &lt;uuid&gt; &lt;seconds&gt;</code></td>
+                <td><code>Registered &lt;uuid&gt; &lt;ip&gt; &lt;port&gt; &lt;seconds&gt;</code></td>
+                <td>Subscribe to a UUID for up to <code>&lt;seconds&gt;</code> seconds. The subscription is removed when that time expires. <code>&lt;ip&gt;</code> and <code>&lt;port&gt;</code> are the UDP source address observed by the server.</td>
               </tr>
               <tr>
                 <td>Notifier client → Server</td>
@@ -226,7 +226,7 @@
           <div class="tab-panel" role="tabpanel" id="panel-node" aria-labelledby="tab-node">
             <ul class="example-steps">
               <li>Run <code>node listener.js</code> in one terminal</li>
-              <li>Run <code>node notifier.js</code> in second terminal</li>
+              <li>Run <code>node notifier.js</code> in a second terminal</li>
             </ul>
             <div class="code-block">
               <span class="file-label">listener.js</span>
@@ -257,7 +257,7 @@ socket.send(`Notify ${uuid}`, 3137, "ready-bell.com");</code></pre>
           <div class="tab-panel" role="tabpanel" id="panel-python" aria-labelledby="tab-python" hidden>
             <ul class="example-steps">
               <li>Run <code>python listener.py</code> in one terminal</li>
-              <li>Run <code>python notifier.py</code> in second terminal</li>
+              <li>Run <code>python notifier.py</code> in a second terminal</li>
             </ul>
             <div class="code-block">
               <span class="file-label">listener.py</span>
@@ -293,7 +293,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
           <div class="tab-panel" role="tabpanel" id="panel-java" aria-labelledby="tab-java" hidden>
             <ul class="example-steps">
               <li>Run <code>java listener.java</code> in one terminal</li>
-              <li>Run <code>java notifier.java</code> in second terminal</li>
+              <li>Run <code>java notifier.java</code> in a second terminal</li>
             </ul>
             <div class="code-block">
               <span class="file-label">listener.java</span>

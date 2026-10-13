@@ -24,7 +24,7 @@
     return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
   }
 
-  // Fills a "paste into nc" block: the Listen line and the responses nc will print.
+  // Fills an "In the terminal, enter:" block: the Listen line and the responses nc will print.
   function showListen(prefix, uuid) {
     uuid = uuid || "<uuid>";
     $(prefix + "-listen").textContent = "Listen " + uuid + " 120";

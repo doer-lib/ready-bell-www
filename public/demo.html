@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ready-bell — live demo</title>
-  <meta name="description" content="Try ready-bell in your browser: start a slow job, wait for its Ready notification with nc, and watch a cloud job report back through ready-bell over Server-Sent Events." />
+  <title>Ready Bell — live demo</title>
+  <meta name="description" content="Try Ready Bell in your browser: start a slow job, wait for its Ready notification with nc, and watch a cloud job report back through Ready Bell over Server-Sent Events." />
   <link rel="canonical" href="https://www.ready-bell.com/demo.html" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -21,7 +21,6 @@
         Ready Bell
       </a>
       <nav class="site-nav">
-        <a href="/">How it works</a>
         <a href="#hello-async">hello-async</a>
         <a href="#hello-cloud">hello-cloud</a>
       </nav>
@@ -51,7 +50,7 @@
         <h2>1. hello-async: the backend sends <code>Notify</code></h2>
         <p class="section-intro">
           Start a job that pretends to work for a few seconds. When it finishes, the backend sends
-          <code>Notify &lt;uuid&gt;</code> to ready-bell, and your terminal, listening on the same
+          <code>Notify &lt;uuid&gt;</code> to Ready Bell, and your terminal, listening on the same
           uuid, receives <code>Ready &lt;uuid&gt;</code>. That is the moment to fetch the result.
         </p>
 
@@ -69,22 +68,21 @@
 
           <li class="step">
             <h3>Listen for it in a terminal</h3>
-            <p class="hint">
-              Start nc in a terminal, then paste the <code>Listen</code> line and press Enter.
-              nc prints <code>Registered …</code> right away, then <code>Ready …</code> when the
-              job below finishes. The subscription lasts 120 seconds.
-            </p>
+            <p class="hint">Open a terminal and start <i>Netcat</i> (<code>nc</code>) in UDP mode:</p>
             <div class="code-block">
-              <span class="file-label">terminal</span>
               <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code>nc -u ready-bell.com 3137</code></pre>
             </div>
+            <p class="hint">In the terminal, enter:</p>
             <div class="code-block">
-              <span class="file-label">paste into nc</span>
               <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code id="a-listen"></code></pre>
               <pre class="response"><span class="response-label">expected response</span><code id="a-response"></code></pre>
             </div>
+            <p class="hint">
+              Watch for <code>Ready</code> in the terminal when the job below finishes.
+              The subscription lasts 120 seconds.
+            </p>
           </li>
 
           <li class="step">
@@ -153,20 +151,20 @@
               <button id="c-uuid-gen" class="btn" type="button">Generate</button>
             </div>
             <p class="hint">
-              Optional: listen for the Lambda's notification yourself. Start nc in a terminal,
-              then paste the <code>Listen</code> line and press Enter.
+              Optional: listen for the Lambda's notification yourself. Open a terminal and start
+              <i>Netcat</i> (<code>nc</code>) in UDP mode:
             </p>
             <div class="code-block">
-              <span class="file-label">terminal</span>
               <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code>nc -u ready-bell.com 3137</code></pre>
             </div>
+            <p class="hint">In the terminal, enter:</p>
             <div class="code-block">
-              <span class="file-label">paste into nc</span>
               <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
               <pre><code id="c-listen"></code></pre>
               <pre class="response"><span class="response-label">expected response</span><code id="c-response"></code></pre>
             </div>
+            <p class="hint">Watch for <code>Ready</code> in the terminal when the Lambda finishes.</p>
           </li>
 
           <li class="step">
@@ -255,7 +253,6 @@
         <h2>Questions, feedback or interested in using Ready Bell?</h2>
         <p class="contact-email"><a href="mailto:ready-bell@proton.me">ready-bell@proton.me</a></p>
         <div class="hero-actions">
-          <a class="button button-primary" href="/">How it works</a>
           <a class="button button-secondary" href="https://github.com/doer-lib/ready-bell-demo">GitHub</a>
         </div>
       </div>

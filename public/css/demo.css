@@ -94,7 +94,12 @@
   font-size: 0.8rem;
 }
 
-/* Expected nc output under the line to paste */
+/* Terminal blocks have no file label; keep the copy button clear of the text */
+.step .code-block pre:first-of-type {
+  padding: 20px 48px 20px 20px;
+}
+
+/* Expected nc output under the line to enter */
 .code-block pre.response {
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
