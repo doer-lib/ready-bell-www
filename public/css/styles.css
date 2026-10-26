@@ -295,6 +295,14 @@ a {
   margin: 0 0 40px;
 }
 
+.section-intro p {
+  margin: 0 0 12px;
+}
+
+.section-intro p:last-child {
+  margin-bottom: 0;
+}
+
 /* Sequence diagram */
 
 .diagram-wrap {
@@ -536,6 +544,20 @@ pre code {
   margin: -6px 0 18px;
 }
 
+.example-call {
+  margin: 0 0 18px;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+.example-call code {
+  display: block;
+  padding: 12px 16px;
+}
+
 .example-steps {
   color: var(--text-secondary);
   font-size: 0.92rem;
@@ -766,4 +788,16 @@ pre code {
   thead th:last-child {
     border-top-right-radius: calc(var(--radius) - 1px);
   }
+}
+
+/* Marked lines in a code block (js/highlight-lines.js) */
+
+.code-line {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.code-line-marked {
+  background: rgba(245, 165, 36, 0.16);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
