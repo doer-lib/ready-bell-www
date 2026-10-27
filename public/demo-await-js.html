@@ -47,16 +47,19 @@
 
     <section id="polling" class="section section-alt">
       <div class="container">
-        <h2>1. Wrap the REST calls in an async function</h2>
-        <p class="section-intro">
-          The <code>hello-async</code> API at <code>demo.ready-bell.com</code> is asynchronous:
-          <code>POST /hello-async/{uuid}</code> starts a job and returns at once, and
-          <code>GET /hello-async/{uuid}</code> reports its status until it is
-          <code>READY</code> or <code>FAILED</code>. In Node.js, all of that fits inside an
-          <code>async</code> function. It submits the job, then loops: sleep, check, and return
-          the job once it has finished. The caller just awaits the result, and never sees the
-          polling.
-        </p>
+        <h2>1. Async Abstraction over REST Polling</h2>
+        <div class="section-intro">
+          <p>The <code>hello-async</code> API at <code>demo.ready-bell.com</code> is asynchronous:</p>
+          <ul>
+            <li><code>POST /hello-async/{uuid}</code> starts a job and returns immediately</li>
+            <li><code>GET /hello-async/{uuid}</code> reports its status until it is <code>READY</code> or <code>FAILED</code></li>
+          </ul>
+          <p>
+            In Node.js, an <code>async</code> function can hide the polling behind a simple
+            interface: submit the job, then loop — sleep, check, and return the result once the
+            job finishes. The caller just awaits the result, without having to deal with polling.
+          </p>
+        </div>
         <div class="code-block">
           <span class="file-label">call-async-api-poll-only.js</span>
           <a class="raw-link" href="examples/call-async-api-poll-only.js">View raw</a>
@@ -109,17 +112,19 @@ function fetchFinishedJob(uuid) {
         <p class="note">
           The poll interval is a trade-off. Poll rarely and the result waits for the next check;
           poll often and most requests only learn that the job is still in progress. With a
-          3-second interval, a 4-second job takes about 6.7 s and two <code>GET</code> requests.
+          3-second polling interval, a job that finishes in 4 seconds won't be detected until the
+          second <code>GET</code> request, so the async function returns the result at least
+          2 seconds later than it becomes available.
         </p>
       </div>
     </section>
 
     <section id="wait" class="section">
       <div class="container">
-        <h2>2. Ready Bell as a replacement for <code>sleep()</code></h2>
+        <h2>2. The <code>ReadyBell</code> Class as a Replacement for <code>sleep()</code></h2>
         <div class="section-intro">
           <p>
-            Ready Bell provides <code>readyBell.wait(uuid, ms)</code> as a replacement for
+            The <code>ReadyBell</code> class provides <code>readyBell.wait(uuid, ms)</code> as a replacement for
             <code>sleep()</code>. It sends <code>Listen &lt;uuid&gt;</code> over UDP and resolves
             when either the timeout expires or a matching <code>Ready &lt;uuid&gt;</code>
             notification arrives, whichever comes first. Notifications received while no
@@ -191,18 +196,22 @@ export class ReadyBell {
 
     <section id="together" class="section section-alt">
       <div class="container">
-        <h2>3. The same function, woken up by Ready Bell</h2>
+        <h2>3. Async Abstraction over Event-Driven Polling</h2>
         <p class="section-intro">
-          <code>callAsyncApi</code> keeps its shape. The highlighted lines are the only ones that
-          use <code>ready-bell.js</code>: subscribe before the <code>POST</code>, so an early
-          <code>Ready</code> isn't missed, and <code>wait</code> instead of <code>sleep</code>.
-          Polling stays as the fallback, because UDP gives no delivery guarantee, so the interval
-          can grow to 15 seconds. The same 4-second job now takes about 4.4 s and one
+          The <code>callAsyncApi</code> function from the first example now uses the
+          <code>ReadyBell</code> class from the second to make the asynchronous REST API more
+          responsive. Its interface stays the same: callers still just <code>await</code> the
+          function, without knowing whether it sleeps or waits for a notification. The
+          highlighted lines are the only ones that use <code>ready-bell.js</code>: subscribe
+          before the <code>POST</code>, so an early <code>Ready</code> isn't missed, and use
+          <code>readyBell.wait()</code> instead of <code>sleep()</code>. Polling remains as a
+          fallback because UDP doesn't guarantee delivery, allowing the interval to grow to
+          15 seconds. The same 4-second job now takes about 4.4 s and requires only one
           <code>GET</code>.
         </p>
         <ul class="example-steps">
-          <li>Put <code>call-async-api.js</code> and <code>ready-bell.js</code> in one directory</li>
-          <li>Run <code>node call-async-api-poll-only.js Alice 4</code>, then <code>node call-async-api.js Alice 4</code>, and compare the times (Node.js 22 or newer)</li>
+          <li>Put <code>call-async-api.js</code> and <code>ready-bell.js</code> in one directory.</li>
+          <li>Run <code>node call-async-api-poll-only.js Alice 4</code>, then <code>node call-async-api.js Alice 4</code>, and compare the times (Node.js 22 or newer).</li>
         </ul>
         <div class="code-block">
           <span class="file-label">call-async-api.js</span>
@@ -254,6 +263,35 @@ function fetchFinishedJob(uuid) {
     job.status === "IN_PROGRESS" ? Promise.reject(new Error("Job IN_PROGRESS")) : job
   );
 }</code></pre>
+        </div>
+        <div class="code-block">
+          <span class="file-label">Terminal</span>
+          <pre><code class="language-plaintext">➜ node call-async-api-poll-only.js Alice 4
+Job IN_PROGRESS
+{
+  id: 'c9c60f09-91f6-4870-8032-6d48530cd085',
+  created: '2026-10-27T16:24:21.490454Z',
+  modified: '2026-10-27T16:24:25.490687Z',
+  status: 'READY',
+  input: { name: 'Alice' },
+  output: { greeting: 'Hello, Alice!' },
+  error_message: null
+}
+callAsyncApi took 6.699 s
+➜ node call-async-api.js Alice 4
+Registered 11fa5281-08f2-47df-953e-645024008f5c 203.0.113.10 50224 30
+Registered 11fa5281-08f2-47df-953e-645024008f5c 203.0.113.10 50224 30
+Ready 11fa5281-08f2-47df-953e-645024008f5c
+{
+  id: '11fa5281-08f2-47df-953e-645024008f5c',
+  created: '2026-10-27T16:24:33.820150Z',
+  modified: '2026-10-27T16:24:37.820392Z',
+  status: 'READY',
+  input: { name: 'Alice' },
+  output: { greeting: 'Hello, Alice!' },
+  error_message: null
+}
+callAsyncApi took 4.544 s</code></pre>
         </div>
       </div>
     </section>

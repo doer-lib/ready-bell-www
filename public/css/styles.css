@@ -299,6 +299,11 @@ a {
   margin: 0 0 12px;
 }
 
+.section-intro ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
 .section-intro p:last-child {
   margin-bottom: 0;
 }
