@@ -117,6 +117,20 @@ a {
   flex-shrink: 0;
 }
 
+.header-start,
+.header-end {
+  display: flex;
+  align-items: center;
+}
+
+.header-start {
+  gap: 36px;
+}
+
+.header-end {
+  gap: 8px;
+}
+
 .site-nav {
   display: flex;
   gap: 28px;
@@ -129,8 +143,83 @@ a {
   font-weight: 500;
 }
 
-.site-nav a:hover {
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
   color: var(--text);
+}
+
+/* Table of contents: a dropdown of the page's sections, filled by js/main.js */
+
+.toc {
+  position: relative;
+}
+
+.toc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.toc-toggle:hover,
+.toc-toggle[aria-expanded="true"] {
+  color: var(--text);
+  border-color: var(--status-idle);
+}
+
+.toc-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toc-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.toc-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-menu a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.toc-menu .toc-h1 {
+  font-weight: 600;
+}
+
+.toc-menu .toc-h2 {
+  padding-left: 22px;
+}
+
+.toc-menu a:hover,
+.toc-menu a:focus-visible {
+  background: var(--accent-soft);
 }
 
 .nav-toggle {
@@ -158,6 +247,13 @@ a {
 
 .nav-toggle span {
   top: 17px;
+}
+
+/* Positioned against the span, so they span its full width */
+.nav-toggle span::before,
+.nav-toggle span::after {
+  left: 0;
+  right: 0;
 }
 
 .nav-toggle span::before {
@@ -764,6 +860,18 @@ pre code {
 
   .nav-toggle {
     display: block;
+  }
+
+  /* Anchor the dropdown to the header so it spans the screen width */
+  .toc {
+    position: static;
+  }
+
+  .toc-menu {
+    top: 72px;
+    left: 16px;
+    right: 16px;
+    width: auto;
   }
 
   .hero {

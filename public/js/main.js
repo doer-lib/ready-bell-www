@@ -3,18 +3,82 @@
 
   var header = document.querySelector(".site-header");
   var navToggle = document.querySelector(".nav-toggle");
+  var tocToggle = document.querySelector(".toc-toggle");
+  var tocMenu = document.getElementById("toc-menu");
+
+  function setNavOpen(open) {
+    if (navToggle && header) {
+      header.classList.toggle("nav-open", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+    }
+  }
+
+  function setTocOpen(open) {
+    if (tocToggle && tocMenu) {
+      tocMenu.hidden = !open;
+      tocToggle.setAttribute("aria-expanded", String(open));
+    }
+  }
 
   if (navToggle && header) {
     navToggle.addEventListener("click", function () {
-      var isOpen = header.classList.toggle("nav-open");
-      navToggle.setAttribute("aria-expanded", String(isOpen));
+      setTocOpen(false);
+      setNavOpen(!header.classList.contains("nav-open"));
     });
 
     document.querySelectorAll(".site-nav a").forEach(function (link) {
       link.addEventListener("click", function () {
-        header.classList.remove("nav-open");
-        navToggle.setAttribute("aria-expanded", "false");
+        setNavOpen(false);
       });
+    });
+  }
+
+  // The page title first, then one entry per section heading (the contact block is left out).
+  var tocList = document.createElement("ul");
+
+  document.querySelectorAll("main section[id]:not(#contact)").forEach(function (section) {
+    var heading = section.querySelector("h1, h2");
+
+    if (!heading) {
+      return;
+    }
+
+    var item = document.createElement("li");
+    var link = document.createElement("a");
+    // The page title leads to the very top of the page, not to its own heading.
+    link.href = heading.tagName === "H1" ? "#top" : "#" + section.id;
+    link.className = "toc-" + heading.tagName.toLowerCase();
+    link.textContent = heading.textContent.replace(/\s+/g, " ").trim();
+    item.appendChild(link);
+    tocList.appendChild(item);
+  });
+
+  if (tocToggle && tocMenu && tocList.children.length) {
+    tocMenu.appendChild(tocList);
+    tocToggle.hidden = false;
+
+    tocToggle.addEventListener("click", function () {
+      setNavOpen(false);
+      setTocOpen(tocMenu.hidden);
+    });
+
+    tocMenu.addEventListener("click", function (event) {
+      if (event.target.closest("a")) {
+        setTocOpen(false);
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".toc")) {
+        setTocOpen(false);
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !tocMenu.hidden) {
+        setTocOpen(false);
+        tocToggle.focus();
+      }
     });
   }
 

@@ -14,21 +14,35 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="/">
-        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M16 6c-1 0-1.8.8-1.8 1.8v.7c-3 .7-5.2 3.4-5.2 6.6v4.4l-1.6 2.4c-.3.5.03 1.1.6 1.1h16c.57 0 .9-.6.6-1.1L23 19.5v-4.4c0-3.2-2.2-5.9-5.2-6.6v-.7C17.8 6.8 17 6 16 6z" fill="currentColor" />
-          <path d="M13.2 23.6a2.8 2.8 0 0 0 5.6 0z" fill="currentColor" />
-        </svg>
-        Ready Bell
-      </a>
-      <nav class="site-nav">
-        <a href="#polling">REST polling</a>
-        <a href="#wait">ReadyBell class</a>
-        <a href="#together">Event-driven polling</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span>
-      </button>
+      <div class="header-start">
+        <a class="brand" href="/">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 6c-1 0-1.8.8-1.8 1.8v.7c-3 .7-5.2 3.4-5.2 6.6v4.4l-1.6 2.4c-.3.5.03 1.1.6 1.1h16c.57 0 .9-.6.6-1.1L23 19.5v-4.4c0-3.2-2.2-5.9-5.2-6.6v-.7C17.8 6.8 17 6 16 6z" fill="currentColor" />
+            <path d="M13.2 23.6a2.8 2.8 0 0 0 5.6 0z" fill="currentColor" />
+          </svg>
+          Ready Bell
+        </a>
+        <nav class="site-nav">
+          <a href="demo.html">Live demo</a>
+          <a href="demo-await-js.html" aria-current="page">Async/Await</a>
+        </nav>
+      </div>
+      <div class="header-end">
+        <div class="toc">
+          <button class="toc-toggle" type="button" aria-label="Table of contents" title="Table of contents" aria-expanded="false" aria-controls="toc-menu" hidden>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 3.5h8M6 8h8M6 12.5h8" />
+              <circle cx="2.5" cy="3.5" r=".6" fill="currentColor" />
+              <circle cx="2.5" cy="8" r=".6" fill="currentColor" />
+              <circle cx="2.5" cy="12.5" r=".6" fill="currentColor" />
+            </svg>
+          </button>
+          <nav class="toc-menu" id="toc-menu" aria-label="Table of contents" hidden></nav>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
 
