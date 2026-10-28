@@ -198,16 +198,17 @@ export class ReadyBell {
       <div class="container">
         <h2>3. Async Abstraction over Event-Driven Polling</h2>
         <p class="section-intro">
-          The <code>callAsyncApi</code> function from the first example now uses the
-          <code>ReadyBell</code> class from the second to make the asynchronous REST API more
+          The <code>callAsyncApi</code> function from the first section can be adapted to use
+          the <code>ReadyBell</code> class from the second to make the asynchronous REST API more
           responsive. Its interface stays the same: callers still just <code>await</code> the
           function, without knowing whether it sleeps or waits for a notification. The
-          highlighted lines are the only ones that use <code>ready-bell.js</code>: subscribe
-          before the <code>POST</code>, so an early <code>Ready</code> isn't missed, and use
-          <code>readyBell.wait()</code> instead of <code>sleep()</code>. Polling remains as a
-          fallback because UDP doesn't guarantee delivery, allowing the interval to grow to
-          15 seconds. The same 4-second job now takes about 4.4 s and requires only one
-          <code>GET</code>.
+          highlighted lines are the ones that changed compared to the first section: they
+          import <code>ready-bell.js</code>, subscribe before the <code>POST</code> so an early
+          <code>Ready</code> isn't missed, call <code>readyBell.wait()</code> instead of
+          <code>sleep()</code>, and raise the polling interval. Polling remains as a fallback
+          because UDP doesn't guarantee delivery, but since the notification normally arrives
+          first, the interval can now be increased to 15 seconds. The same 4-second job now
+          takes about 4.5 s and requires only one <code>GET</code>.
         </p>
         <ul class="example-steps">
           <li>Put <code>call-async-api.js</code> and <code>ready-bell.js</code> in one directory.</li>
@@ -217,7 +218,7 @@ export class ReadyBell {
           <span class="file-label">call-async-api.js</span>
           <a class="raw-link" href="examples/call-async-api.js">View raw</a>
           <button class="copy-btn" type="button" title="Copy to clipboard" aria-label="Copy to clipboard"></button>
-          <pre><code class="language-javascript" data-highlight-lines="3,9,20,23">// Usage: node call-async-api.js [name] [dbg-delay-sec]
+          <pre><code class="language-javascript" data-highlight-lines="3,6,9,20,23">// Usage: node call-async-api.js [name] [dbg-delay-sec]
 
 import { ReadyBell } from "./ready-bell.js";
 
