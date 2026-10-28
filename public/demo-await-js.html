@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ready Bell — async API as an async function</title>
+  <title>Ready Bell — An Async API in One Function</title>
   <meta name="description" content="Wrap an asynchronous REST API in a Node.js async function, then replace its sleep with a wait that wakes up on a Ready Bell UDP notification." />
   <link rel="canonical" href="https://www.ready-bell.com/demo-await-js.html" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -22,9 +22,9 @@
         Ready Bell
       </a>
       <nav class="site-nav">
-        <a href="#polling">Polling</a>
-        <a href="#wait">Instead of sleep</a>
-        <a href="#together">Together</a>
+        <a href="#polling">REST polling</a>
+        <a href="#wait">ReadyBell class</a>
+        <a href="#together">Event-driven polling</a>
       </nav>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
         <span></span>
@@ -36,11 +36,12 @@
     <section class="hero hero-compact" id="top">
       <div class="container">
         <p class="pill">Ready Bell · async/await</p>
-        <h1>An async API as an async function</h1>
+        <h1>An Async API in One Function</h1>
         <p class="lead">
-          A slow job behind two REST requests reads best as one line of code:
-          <code>const result = await callAsyncApi("Alice", 7)</code>. Here is how to get there
-          with polling, and how Ready Bell makes the same function faster and lighter.
+          A slow job exposed through a REST API can be called in one line of code:
+          <code>const result = await callAsyncApi("Alice", 7)</code>. This article shows how to
+          build that interface with polling and how Ready Bell makes it more responsive while
+          reducing the number of requests.
         </p>
       </div>
     </section>
@@ -265,6 +266,11 @@ function fetchFinishedJob(uuid) {
   );
 }</code></pre>
         </div>
+        <p class="example-note">
+          Output of both runs. <code>Job IN_PROGRESS</code> is the message of the error from
+          <code>fetchFinishedJob</code>. <code>Registered</code> and <code>Ready</code> are UDP
+          packets received from <code>ready-bell.com:3137</code>.
+        </p>
         <div class="code-block">
           <span class="file-label">Terminal</span>
           <pre><code class="language-plaintext">➜ node call-async-api-poll-only.js Alice 4
